@@ -7,6 +7,7 @@ function Portfolio() {
         <TimelineHeading
           title="Portfolio"
           subtitle="My Amazing Works"
+          accentWord="Amazing"
           description=" Most common methods for designing websites that work well on desktop
             is responsive and adaptive design"
         />

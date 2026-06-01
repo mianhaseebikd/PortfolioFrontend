@@ -30,6 +30,7 @@ function Timeline() {
       <TimelineHeading
         title="Resume"
         subtitle="My Education & Expertise"
+        accentWord="Expertise"
         description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
       />
 

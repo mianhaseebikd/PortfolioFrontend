@@ -92,7 +92,7 @@ function About() {
           style={{ transitionDelay: "0.4s" }}
         >
           <h3 className="orange-text">Hello, I'm Developer</h3>
-          <h2 className="headind-2">I Can Design Anything You Want</h2>
+          <h2 className="headind-2">I Can <span className="heading-accent">Design</span> Anything You Want</h2>
           <p>
             Hello there! I'm a web designer, and I'm very passionate and dedicated
             to my work. With two years experience as a professional web developer,

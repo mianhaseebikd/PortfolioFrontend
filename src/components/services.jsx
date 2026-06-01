@@ -7,6 +7,7 @@ function Services() {
         <TimelineHeading
           title="Services"
           subtitle="What I Do for Clients"
+          accentWord="Clients"
           description=" Most common methods for designing websites that work well on desktop
             is responsive and adaptive design"
         />

@@ -1,0 +1,58 @@
+const Blogs = [
+    {
+        id: 1,
+        title: "How to Build a Fast WordPress Website in 2024",
+        category: "WordPress",
+        date: "March 12, 2024",
+        image: "/images/imgi_65_2-2.jpg",
+        excerpt: "A practical guide to improving page speed, reducing plugin bloat, and keeping your site lean for better conversions.",
+        link: "#",
+    },
+    {
+        id: 2,
+        title: "Top 10 Shopify Tips to Boost Your Ecommerce Sales",
+        category: "Ecommerce",
+        date: "April 5, 2024",
+        image: "/images/imgi_64_3-2.jpg",
+        excerpt: "A focused checklist for stronger product pages, smarter checkout flows, and better customer retention.",
+        link: "#",
+    },
+    {
+        id: 3,
+        title: "React vs Next.js — Which One Should You Choose?",
+        category: "Development",
+        date: "April 18, 2024",
+        image: "/images/imgi_66_1-2.jpg",
+        excerpt: "Compare performance, SEO, routing, and developer experience so you can choose the right framework for your project.",
+        link: "#",
+    },
+    {
+        id: 4,
+        title: "UI/UX Design Principles Every Developer Should Know",
+        category: "Design",
+        date: "May 2, 2024",
+        image: "/images/imgi_66_1-2.jpg",
+        excerpt: "Learn how subtle spacing, hierarchy, and visual rhythm improve usability and make your interfaces feel premium.",
+        link: "#",
+    },
+    {
+        id: 5,
+        title: "How to Get Your First Client on Fiverr & Upwork",
+        category: "Freelancing",
+        date: "May 14, 2024",
+        image: "/images/imgi_64_3-2.jpg",
+        excerpt: "Practical steps to positioning your services, writing better proposals, and building trust with early clients.",
+        link: "#",
+    },
+    {
+        id: 6,
+        title: "WooCommerce vs Shopify — A Complete Comparison",
+        category: "Ecommerce",
+        date: "May 22, 2024",
+        image: "/images/imgi_65_2-2.jpg",
+        excerpt: "A side-by-side breakdown of flexibility, ease of use, and long-term growth so you can choose the right platform.",
+        link: "#",
+    },
+];
+
+export { Blogs };
