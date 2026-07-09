@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import TimelineHeading from './heading.jsx';
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 /* ── Brand SVG Icons ── */
 const BrandIcon = ({ name }) => {
   switch (name) {
@@ -56,20 +57,12 @@ const BrandIcon = ({ name }) => {
   }
 };
 
-const companies = [
-  { id: 1, name: "WordPress"   },
-  { id: 2, name: "Shopify"     },
-  { id: 3, name: "Fiverr"      },
-  { id: 4, name: "Upwork"      },
-  { id: 5, name: "WooCommerce" },
-  { id: 6, name: "Elementor"   },
-  { id: 7, name: "Figma"       },
-  { id: 8, name: "React"       },
-];
-
 const CompaniesSection = () => {
+  const { content } = useSiteContent();
   const wrapperRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const siteSettings = content?.siteSettings || {};
+  const companies = Array.isArray(content?.companies) ? content.companies : [];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -89,10 +82,11 @@ const CompaniesSection = () => {
 
       {/* ── Heading ── */}
 
-        <TimelineHeading
-        title="Trusted Platforms"
-        subtitle="Companies & Tools I Work With"
-        accentWord="Tools"
+      <TimelineHeading
+        title={siteSettings.companiesTitle || ""}
+        subtitle={siteSettings.companiesSubtitle || ""}
+        accentWord=""
+        description={siteSettings.companiesDescription || ""}
       />
 
       {/* ── Grid ── */}
@@ -101,12 +95,16 @@ const CompaniesSection = () => {
           {companies.map((c, i) => (
             <div
               className="comp-cell"
-              key={c.id}
+              key={c._id || c.id || c.name || i}
               style={{ transitionDelay: `${i * 0.07}s` }}
             >
               <div className="comp-cell-inner">
                 <div className="comp-icon">
-                  <BrandIcon name={c.name} />
+                  {c.logoUrl ? (
+                    <img src={c.logoUrl} alt={c.name} className="comp-logo" />
+                  ) : (
+                    <BrandIcon name={c.iconName || c.name} />
+                  )}
                 </div>
                 <span className="comp-name">{c.name}</span>
               </div>

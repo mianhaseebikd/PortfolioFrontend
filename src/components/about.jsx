@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 
 function About() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const { content } = useSiteContent();
+  const about = content?.about || {};
+  const siteSettings = content?.siteSettings || {};
+  const aboutStats = Array.isArray(about.stats) ? about.stats : [];
+  const totalProjectsValue = Number.parseInt(String(aboutStats[0]?.value || "0").replace(/[^\d]/g, ""), 10) || 0;
+  const experienceValue = Number.parseInt(String(aboutStats[1]?.value || "0").replace(/[^\d]/g, ""), 10) || 0;
+  const projectLabel = aboutStats[0]?.label || "";
+  const experienceLabel = aboutStats[1]?.label || "";
 
   // AnimatedNumber component
   function AnimatedNumber({ value, visible, suffix = "", className = "" }) {
@@ -54,23 +63,23 @@ function About() {
       ref={sectionRef}
     >
       <div className="row80">
-        <div
-          className={`col-2 about-col about-img ${isVisible ? "fade-left" : ""}`}
-          style={{ transitionDelay: "0.2s" }}
-        >
-          <img src="/images/about-image.png" alt="" />
+          <div
+            className={`col-2 about-col about-img ${isVisible ? "fade-left" : ""}`}
+            style={{ transitionDelay: "0.2s" }}
+          >
+          {about.image ? <img src={about.image} alt={about.title || "About"} /> : null}
 
           <div
             className="about-boxes projects-float"
             style={{ transitionDelay: "0.4s" }}
           >
             <AnimatedNumber
-              value={100}
+              value={totalProjectsValue}
               visible={isVisible}
               suffix="+"
               className="about-heading-green"
             />
-            Total <br /> Projects
+            {projectLabel}
           </div>
 
           <div
@@ -78,12 +87,12 @@ function About() {
             style={{ transitionDelay: "0.6s" }}
           >
             <AnimatedNumber
-              value={2}
+              value={experienceValue}
               visible={isVisible}
               suffix="+"
               className="about-heading-blue"
             />
-            Years of <br />Experience
+            {experienceLabel}
           </div>
         </div>
 
@@ -91,18 +100,16 @@ function About() {
           className={`col-2 about-col about-content ${isVisible ? "fade-right" : ""}`}
           style={{ transitionDelay: "0.4s" }}
         >
-          <h3 className="orange-text">Hello, I'm Developer</h3>
-          <h2 className="headind-2">I Can <span className="heading-accent">Design</span> Anything You Want</h2>
-          <p>
-            Hello there! I'm a web designer, and I'm very passionate and dedicated
-            to my work. With two years experience as a professional web developer,
-            I have acquired the skills and knowledge necessary to make your project
-            a success. I enjoy every step of the design process, from discussion
-            and collaboration.
-          </p>
-          <a href="#">
-            <button href="/images/my-resume.png" className="button">About Me</button>
-          </a>
+          <h3 className="orange-text">{about.eyebrow || ""}</h3>
+          <h2 className="headind-2">
+            {about.title || ""}
+          </h2>
+          <p>{about.description || ""}</p>
+          {siteSettings.resumeUrl ? (
+            <a href={siteSettings.resumeUrl} download className="button">
+              {siteSettings.resumeButtonLabel || ""}
+            </a>
+          ) : null}
         </div>
       </div>
     </div>

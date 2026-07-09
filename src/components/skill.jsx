@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import AnimatedNumber from "./animatedNumber";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 
 function Skill() {
+    const { content } = useSiteContent();
     const [visible, setVisible] = useState(false);
     const skillRef = useRef(null);
+    const siteSettings = content?.siteSettings || {};
+    const skillItems = Array.isArray(content?.skills) ? content.skills : [];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -27,51 +31,35 @@ function Skill() {
         <div className="skill-wrapper" ref={skillRef}>
             <div className="row80 skill-row">
                 <div className={`col-2 skill-content ${visible ? "show" : ""}`}>
-                    <h3 className="orange-text">Design is Life</h3>
+                    <h3 className="orange-text">{siteSettings.skillTitle || ""}</h3>
                     <h2 className="headind-2">
-                        I Develop Skills Regularly to Keep Me Update
+                        {siteSettings.skillSubtitle || ""}
                     </h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus,
-                        nulla recusandae animi exercitationem natus quidem.
-                    </p>
+                    <p>{siteSettings.skillDescription || ""}</p>
                     <div className="skill-bars">
-                        <div className={`progress-box ${visible ? "fill-html" : ""}`}>
+                        {skillItems.map((item, index) => (
+                        <div className={`progress-box ${visible ? "fill-html" : ""}`} key={item._id || item.id || item.title || index}>
                             <div className="progress-lable progress-html">
-                                <span className="progress-title">HTML, CSS & JavaScript</span>
-                                <AnimatedNumber value={90} visible={visible} />
+                                <span className="progress-title">{item.title}</span>
+                                <AnimatedNumber value={Number(item.value || 0)} visible={visible} />
                             </div>
-                            <div className="progress-bars css-bar"></div>
-                        </div>
-
-                        <div className={`progress-box ${visible ? "fill-js" : ""}`}>
-                            <div className="progress-lable progress-js">
-                                <span className="progress-title">React JS</span>
-                                <AnimatedNumber value={60} visible={visible} />
+                            <div className="progress-bars">
+                                <span
+                                    className="progress-fill"
+                                    style={{
+                                        width: `${Math.min(100, Math.max(0, Number(item.value || 0)))}%`,
+                                        backgroundColor: index % 3 === 0 ? "var(--first)" : index % 3 === 1 ? "var(--second)" : "var(--third)",
+                                    }}
+                                />
                             </div>
-                            <div className="progress-bars js-bar"></div>
                         </div>
-
-                        <div className={`progress-box ${visible ? "fill-wp" : ""}`}>
-                            <div className="progress-lable progress-wp">
-                                <span className="progress-title">WordPress</span>
-                                <AnimatedNumber value={85} visible={visible} />
-                            </div>
-                            <div className="progress-bars wp-bar"></div>
-                        </div>
-                        <div className={`progress-box ${visible ? "fill-html" : ""}`}>
-                            <div className="progress-lable progress-html">
-                                <span className="progress-title">Tailwind CSS</span>
-                                <AnimatedNumber value={80} visible={visible} />
-                            </div>
-                            <div className="progress-bars css-bar"></div>
-                        </div>
+                        ))}
 
                     </div>
                 </div>
 
                 <div className={`col-2 skill-image ${visible ? "show" : ""}`}>
-                    <img src="/images/skills.webp" alt="Skill" />
+                    <img src="/images/skills.webp" alt={siteSettings.skillSubtitle || "Skills"} />
                 </div>
             </div>
         </div>

@@ -1,17 +1,18 @@
 import Gallery from "./gallery.jsx";
 import TimelineHeading from "./heading.jsx";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 function Portfolio() {
+  const { content } = useSiteContent();
+  const siteSettings = content?.siteSettings || {};
   return (
     <>
       <div className="portfolio-wrapper" id="portfolio">
         <TimelineHeading
-          title="Portfolio"
-          subtitle="My Amazing Works"
-          accentWord="Amazing"
-          description=" Most common methods for designing websites that work well on desktop
-            is responsive and adaptive design"
+          title={siteSettings.portfolioTitle || ""}
+          subtitle={siteSettings.portfolioSubtitle || ""}
+          accentWord=""
+          description={siteSettings.portfolioDescription || ""}
         />
-        {/* import gallery from './gallery.jsx'; */}
         <Gallery />
       </div>
     </>

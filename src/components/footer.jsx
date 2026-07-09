@@ -1,33 +1,33 @@
-import React from 'react';
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from 'react-icons/fa';
-
-const footerLinks = [
-  { label: 'Home', href: '#' },
-  { label: 'About', href: '#about' },
-  { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Services', href: '#services' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Contact', href: '#contact' },
-];
-
-const socialLinks = [
-  { label: 'Facebook', href: '#', icon: FaFacebookF },
-  { label: 'Instagram', href: '#', icon: FaInstagram },
-  { label: 'Twitter', href: '#', icon: FaTwitter },
-  { label: 'LinkedIn', href: '#', icon: FaLinkedinIn },
-];
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 
 const Footer = () => {
+  const { content } = useSiteContent();
+  const siteSettings = content?.siteSettings || {};
+  const footerLinks = [
+    { label: siteSettings.navHomeLabel || "", href: "/" },
+    { label: siteSettings.navAboutLabel || "", href: "/#about" },
+    { label: siteSettings.navPortfolioLabel || "", href: "/portfolio" },
+    { label: siteSettings.navServicesLabel || "", href: "/services" },
+    { label: siteSettings.navBlogLabel || "", href: "/blog" },
+    { label: siteSettings.navContactLabel || "", href: "/#contact" },
+  ].filter((link) => link.label);
+
+  const socialLinks = [
+    { label: "Facebook", href: siteSettings.socialLinks?.facebook || "", icon: FaFacebookF },
+    { label: "Instagram", href: siteSettings.socialLinks?.instagram || "", icon: FaInstagram },
+    { label: "Twitter", href: siteSettings.socialLinks?.twitter || "", icon: FaTwitter },
+    { label: "LinkedIn", href: siteSettings.socialLinks?.linkedin || "", icon: FaLinkedinIn },
+  ].filter((link) => link.href);
+
   return (
     <footer className="site-footer">
       <div className="row80 footer-simple">
-        <a href="#" className="footer-logo" aria-label="Go to top">
-          <img src="/images/ha-webz.png" alt="ha-webz logo" />
+        <a href="/" className="footer-logo" aria-label="Go to top">
+          {siteSettings.logoUrl ? <img src={siteSettings.logoUrl} alt={siteSettings.siteName || "logo"} /> : null}
         </a>
 
-        <p className="footer-tagline">
-          Clean, modern web design with a strong focus on clarity and user experience.
-        </p>
+        <p className="footer-tagline">{siteSettings.footerTagline || ""}</p>
 
         <div className="footer-socials" aria-label="Social links">
           {socialLinks.map((item) => {
@@ -49,10 +49,10 @@ const Footer = () => {
             </a>
           ))}
         </nav>
-
       </div>
+
       <div className="footer-bottom">
-        <span>(c) 2026 Haseeb Ahmad</span>
+        <span>© {new Date().getFullYear()} {siteSettings.siteName || ""}</span>
         <span>All rights reserved.</span>
       </div>
     </footer>

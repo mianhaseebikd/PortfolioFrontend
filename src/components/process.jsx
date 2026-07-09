@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 
-function TiltCard({ children, index, visible, forwardRef }) {
+function TiltCard({ children, index, visible }) {
   const cardRef = useRef(null);
 
   const handleMouseMove = (e) => {
@@ -24,16 +25,13 @@ function TiltCard({ children, index, visible, forwardRef }) {
   const handleMouseLeave = () => {
     const card = cardRef.current;
     if (!card) return;
-    card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+    card.style.transform = "rotateX(0deg) rotateY(0deg)";
     card.style.transition = "transform 0.3s ease";
   };
 
   return (
     <div
-      ref={(el) => {
-        cardRef.current = el;
-        if (forwardRef) forwardRef(el);
-      }}
+      ref={cardRef}
       data-id={index}
       className={`col-3 card process-card ${visible ? "show" : ""}`}
       style={{ transitionDelay: `${index * 0.2}s` }}
@@ -46,61 +44,27 @@ function TiltCard({ children, index, visible, forwardRef }) {
 }
 
 function Process() {
-  const [visibleCards, setVisibleCards] = useState([]);
-  const cardsRef = useRef([]);
+  const { content } = useSiteContent();
+  const [ready, setReady] = useState(false);
+  const processCards = Array.isArray(content?.processes) ? content.processes : [];
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = parseInt(entry.target.getAttribute("data-id"), 10); // 👉 number
-            setVisibleCards((prev) =>
-              prev.includes(id) ? prev : [...prev, id]
-            );
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    cardsRef.current.forEach((card) => {
-      if (card) observer.observe(card);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const cardData = [
-    {
-      title: "WordPress HA-Developers",
-      text: "Most common methods for designing websites that work well on desktop is responsive and adaptive design.",
-    },
-    {
-      title: "Frontend Development",
-      text: "Crafting interactive, user-friendly designs that adapt seamlessly to any screen size.",
-    },
-    {
-      title: "Ecommerce Solutions",
-      text: "Building scalable, secure, and fast online stores to grow your business.",
-    },
-  ];
+    setReady(processCards.length > 0);
+  }, [processCards.length]);
 
   return (
     <div className="second-container" id="process">
       <div className="row-3">
-        {cardData.map((card, index) => (
+        {processCards.map((card, index) => (
           <TiltCard
-            key={index}
+            key={card._id || card.id || card.title || index}
             index={index}
-            visible={visibleCards.includes(index)} // 👉 ab number compare hoga
-            forwardRef={(el) => (cardsRef.current[index] = el)}
+            visible={ready}
           >
             <div className="inner-box-process process-circle">
               <span className="pcircle-bg">
-                <img src="/images/process-bg-1.png" alt={card.title} />
-                <img src="/images/process-icon-1.svg" alt={card.title} />
+                <img src={card.bgImage || "/images/process-bg-1.png"} alt={card.title} />
+                <img src={card.iconImage || "/images/process-icon-1.svg"} alt={card.title} />
               </span>
             </div>
             <div className="inner-box-process process-heading">

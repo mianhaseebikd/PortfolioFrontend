@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import TimelineHeading from "./heading.jsx";
-import { Blogs } from "../content/blogs.js";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 
 const CalendarIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -42,7 +42,7 @@ const BlogCard = ({ blog, index }) => {
 
   return (
     <a
-      href={blog.link || "#"}
+      href={blog.link || `/blog/${encodeURIComponent(blog.slug || blog.id || blog.title)}`}
       className={`blog-card-link${show ? " blog-card-show" : ""}`}
       ref={cardRef}
       style={{ transitionDelay: `${index * 0.12}s` }}
@@ -67,18 +67,45 @@ const BlogCard = ({ blog, index }) => {
 };
 
 const Blog = () => {
+  const { content } = useSiteContent();
+  const blogData = useMemo(() => {
+    const source = Array.isArray(content?.blogs) ? content.blogs : [];
+    return source.map((blog, index) => {
+      const publishedDate = blog.date || blog.publishedAt || blog.createdAt;
+      const dateLabel = publishedDate
+        ? new Date(publishedDate).toLocaleDateString(undefined, {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "";
+
+      return {
+        id: blog._id || blog.id || blog.slug || `${blog.title}-${index}`,
+        title: blog.title,
+        slug: blog.slug || blog._id || blog.id || `${blog.title}-${index}`,
+        category: blog.category,
+        date: dateLabel,
+        image: blog.image,
+        excerpt: blog.excerpt,
+        link: blog.link || `/blog/${encodeURIComponent(blog.slug || blog._id || blog.id || `${blog.title}-${index}`)}`,
+      };
+    });
+  }, [content?.blogs]);
+
   return (
     <div className="blog-wrapper" id="blog">
       <TimelineHeading
-        title="Blog"
-        subtitle="Our Recent Blogs"
-        accentWord="Blogs"
-        description="Thoughts, tips and insights on web development, design and freelancing."
+        title={content?.siteSettings?.blogTitle || ""}
+        subtitle={content?.siteSettings?.blogSubtitle || ""}
+        accentWord=""
+        description={content?.siteSettings?.blogDescription || ""}
       />
       <div className="row80 blog-row">
-        {Blogs.map((blog, i) => (
+        {blogData.map((blog, i) => (
           <BlogCard key={blog.id} blog={blog} index={i} />
         ))}
+        {!blogData.length ? <p className="empty-state">No blog posts available.</p> : null}
       </div>
     </div>
   );

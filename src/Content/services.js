@@ -1,6 +1,7 @@
 const Services = [
   {
     id: 1,
+    category: "Development",
     icon: "/images/price-card-1.svg",
     image: "/images/portfolio/portfolio-1.jpg",
     iconBg: "/images/burch-org.webp",
@@ -13,6 +14,7 @@ const Services = [
   },
   {
     id: 2,
+    category: "Design",
     icon: "/images/prices-2.svg",
     image: "/images/portfolio/portfolio-2.jpg",
     iconBg: "/images/burch-yel.webp",
@@ -25,6 +27,7 @@ const Services = [
   },
   {
     id: 3,
+    category: "Ecommerce",
     icon: "/images/price-card-3.svg",
     image: "/images/portfolio/portfolio-1.jpg",
     iconBg: "/images/burch-blue.webp",
@@ -37,6 +40,7 @@ const Services = [
   },
   {
     id: 4,
+    category: "Marketing",
     icon: "/images/price-card-4.svg",
     image: "/images/portfolio/portfolio-3.jpg",
     iconBg: "/images/burch-gren.webp",

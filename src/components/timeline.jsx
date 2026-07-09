@@ -1,77 +1,67 @@
 import { FaUserGraduate, FaAnchor } from "react-icons/fa";
-import timelineData, { timeLineExperience } from "../Content/timeLine.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TimelineHeading from "./heading.jsx";
+import { useSiteContent } from "../context/SiteContentContext.jsx";
 
 function Timeline() {
+  const { content } = useSiteContent();
+  const siteSettings = content?.siteSettings || {};
+  const educationData = Array.isArray(content?.education) ? content.education : [];
+  const experienceData = Array.isArray(content?.experience) ? content.experience : [];
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
-    // Animate content boxes
-    const boxes = document.querySelectorAll(".tcontent-box");
-    const heads = document.querySelectorAll(".timeline-head");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    boxes.forEach((box) => observer.observe(box));
-    heads.forEach((head) => observer.observe(head));
-  }, []);
+    setReady(educationData.length > 0 || experienceData.length > 0);
+  }, [educationData.length, experienceData.length]);
 
   return (
     <div className="timeline-wrapper" id="resume">
       <TimelineHeading
-        title="Resume"
-        subtitle="My Education & Expertise"
-        accentWord="Expertise"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        title={siteSettings.timelineTitle || ""}
+        subtitle={siteSettings.timelineSubtitle || ""}
+        accentWord=""
+        description={siteSettings.timelineDescription || ""}
       />
 
       <div className="timeline-row">
-        {/* Education */}
         <div className="timeline-col">
-          <div className="timeline-head left">
+          <div className={`timeline-head left ${ready ? "show" : ""}`}>
             <FaUserGraduate className="icon" />
             <h3>Education</h3>
           </div>
           <div className="timeline-box">
-            {timelineData.map((item, index) => (
-              <div className="tcontent-box" key={index}>
+            {educationData.map((item, index) => (
+              <div className={`tcontent-box ${ready ? "show" : ""}`} key={index} style={{ transitionDelay: `${index * 0.12}s` }}>
                 <span>{item.year}</span>
                 <h3>{item.college}</h3>
                 <h4>{item.degree}</h4>
                 <p>{item.description}</p>
               </div>
             ))}
+            {!educationData.length ? <p className="empty-state">No education records available.</p> : null}
           </div>
         </div>
 
-        {/* Experience */}
         <div className="timeline-col">
-          <div className="timeline-head right">
+          <div className={`timeline-head right ${ready ? "show" : ""}`}>
             <FaAnchor className="icon" />
             <h3>Experience</h3>
           </div>
           <div className="timeline-box">
-            {timeLineExperience.map((item, index) => (
-              <div className="tcontent-box" key={index}>
+            {experienceData.map((item, index) => (
+              <div className={`tcontent-box ${ready ? "show" : ""}`} key={index} style={{ transitionDelay: `${index * 0.12}s` }}>
                 <span>{item.year}</span>
                 <h3>{item.college}</h3>
                 <h4>{item.degree}</h4>
                 <p>{item.description}</p>
               </div>
             ))}
+            {!experienceData.length ? <p className="empty-state">No experience records available.</p> : null}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 export default Timeline;

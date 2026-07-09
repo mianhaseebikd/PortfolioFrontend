@@ -1,36 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TimelineHeading from './heading.jsx';
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
-
-const contactItems = [
-  {
-    icon: FaMapMarkerAlt,
-    label: 'Address',
-    value: '20, Somewhere in world',
-    iconClass: 'contact-icon-address',
-  },
-  {
-    icon: FaEnvelope,
-    label: 'Email',
-    value: 'hello@dizme.com',
-    iconClass: 'contact-icon-email',
-  },
-  {
-    icon: FaPhoneAlt,
-    label: 'Phone',
-    value: '+123 456 7890',
-    iconClass: 'contact-icon-phone',
-  },
-];
+import { useSiteContent } from "../context/SiteContentContext.jsx";
+import { publicApi } from "../lib/api.js";
 
 const Contact = () => {
+  const { content } = useSiteContent();
+  const siteSettings = content?.siteSettings || {};
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [status, setStatus] = useState({ loading: false, success: "", error: "" });
+  const contactItems = [
+    {
+      icon: FaMapMarkerAlt,
+      label: "Address",
+      value: siteSettings.address || "",
+      iconClass: "contact-icon-address",
+    },
+    {
+      icon: FaEnvelope,
+      label: "Email",
+      value: siteSettings.primaryEmail || "",
+      iconClass: "contact-icon-email",
+    },
+    {
+      icon: FaPhoneAlt,
+      label: "Phone",
+      value: siteSettings.primaryPhone || "",
+      iconClass: "contact-icon-phone",
+    },
+  ].filter((item) => item.value);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      setStatus({ loading: true, success: "", error: "" });
+      await publicApi.contact(form);
+      setStatus({ loading: false, success: "Message sent successfully.", error: "" });
+      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (error) {
+      setStatus({ loading: false, success: "", error: error.message || "Failed to send message." });
+    }
+  };
+
   return (
     <section className="contact-wrapper" id="contact">
       <TimelineHeading
-        title="Contact Me"
-        subtitle="I Want To Hear From You"
-        accentWord="From"
-        description="Please fill out the form on this section to contact with me. Or call between 9:00 a.m. and 8:00 p.m. ET, Monday through Friday."
+        title={siteSettings.contactTitle || ""}
+        subtitle={siteSettings.contactSubtitle || ""}
+        accentWord=""
+        description={siteSettings.contactDescription || ""}
       />
 
       <div className="row80 contact-row">
@@ -53,10 +77,18 @@ const Contact = () => {
           </div>
         </aside>
 
-        <form className="contact-form-panel" onSubmit={(e) => e.preventDefault()}>
+        <form className="contact-form-panel" onSubmit={handleSubmit}>
           <div className="contact-field">
             <label htmlFor="contact-name" className="sr-only">Your Name</label>
-            <input id="contact-name" type="text" name="name" placeholder="Your Name" required />
+            <input
+              id="contact-name"
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              required
+              value={form.name}
+              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+            />
           </div>
 
           <div className="contact-field">
@@ -68,17 +100,34 @@ const Contact = () => {
               autoComplete="email"
               placeholder="Your Email"
               required
+              value={form.email}
+              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
             />
           </div>
 
           <div className="contact-field">
             <label htmlFor="contact-phone" className="sr-only">Your Phone</label>
-            <input id="contact-phone" type="tel" name="phone" placeholder="Your Phone" />
+            <input
+              id="contact-phone"
+              type="tel"
+              name="phone"
+              placeholder="Your Phone"
+              value={form.phone}
+              onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
+            />
           </div>
 
           <div className="contact-field">
             <label htmlFor="contact-subject" className="sr-only">Subject</label>
-            <input id="contact-subject" type="text" name="subject" placeholder="Subject" required />
+            <input
+              id="contact-subject"
+              type="text"
+              name="subject"
+              placeholder="Subject"
+              required
+              value={form.subject}
+              onChange={(e) => setForm((prev) => ({ ...prev, subject: e.target.value }))}
+            />
           </div>
 
           <div className="contact-field contact-full">
@@ -89,12 +138,18 @@ const Contact = () => {
               rows="7"
               placeholder="Write your message here"
               required
+              value={form.message}
+              onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
             ></textarea>
           </div>
 
           <div className="contact-actions">
-            <button type="submit" className="newsletter-submit">Submit Now</button>
+            <button type="submit" className="newsletter-submit" disabled={status.loading}>
+              {status.loading ? "Sending..." : siteSettings.contactButtonLabel || ""}
+            </button>
           </div>
+          {status.success ? <p className="form-success">{status.success}</p> : null}
+          {status.error ? <p className="form-error">{status.error}</p> : null}
         </form>
       </div>
     </section>
