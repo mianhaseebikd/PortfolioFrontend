@@ -1,6 +1,11 @@
+const PRODUCTION_API_BASE =
+  "https://portfoliobackend-production-d4e4.up.railway.app/api";
+
 const API_BASE =
   (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
-  "http://localhost:5000/api";
+  (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.PROD
+    ? PRODUCTION_API_BASE
+    : "http://localhost:5000/api");
 
 const getToken = () => localStorage.getItem("admin_token");
 

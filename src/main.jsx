@@ -1,9 +1,10 @@
-import { StrictMode } from 'react';
+import { StrictMode, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 import { SiteContentProvider } from './context/SiteContentContext.jsx';
 import PublicApp from './PublicApp.jsx';
-import AdminPanel from './admin/AdminPanel.jsx';
+
+const AdminPanel = lazy(() => import('./admin/AdminPanel.jsx'));
 
 const isAdminRoute =
   window.location.hostname.startsWith("admin.") ||
@@ -12,7 +13,9 @@ const isAdminRoute =
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     {isAdminRoute ? (
-      <AdminPanel />
+      <Suspense fallback={<div className="site-data-banner site-data-banner-loading">Loading admin panel...</div>}>
+        <AdminPanel />
+      </Suspense>
     ) : (
       <SiteContentProvider>
         <PublicApp />

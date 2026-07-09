@@ -159,7 +159,7 @@ const Testimonial = () => {
               }}
               aria-label={`View ${c.clientName}'s review`}
             >
-              {c.imageUrl ? <img src={c.imageUrl} alt={c.clientName} /> : null}
+              {c.imageUrl ? <img src={c.imageUrl} alt={c.clientName} loading="lazy" decoding="async" /> : null}
             </button>
           );
         })}
@@ -199,7 +199,7 @@ const Testimonial = () => {
               </div>
               <div className="testi-author">
                 <div className="testi-author-avatar-wrap">
-                  {client.imageUrl ? <img src={client.imageUrl} alt={client.clientName} className="testi-author-avatar" /> : null}
+                  {client.imageUrl ? <img src={client.imageUrl} alt={client.clientName} className="testi-author-avatar" loading="lazy" decoding="async" /> : null}
                 </div>
                 <div className="testi-author-info">
                   <h4>{client.clientName}</h4>

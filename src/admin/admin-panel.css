@@ -2215,3 +2215,51 @@ button.admin-button.soft.sidebar-logout {
     text-align: left;
   }
 }
+
+.admin-shell .admin-sidebar {
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.admin-shell .admin-nav button {
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.admin-shell .admin-nav button:hover {
+  transform: translateX(2px);
+}
+
+.admin-shell .admin-nav button.active {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.admin-shell .admin-panel {
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.admin-shell .admin-field input:focus,
+.admin-shell .admin-field textarea:focus,
+.admin-shell .admin-field select:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.admin-shell .empty-state,
+.admin-shell .admin-empty {
+  padding: 28px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  text-align: center;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-shell .admin-button.primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: 0;
+}
+
+.admin-shell .auth-card {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
